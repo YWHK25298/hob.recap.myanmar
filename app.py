@@ -8,7 +8,7 @@ st.write("Gemini AI ကို အသုံးပြု၍ ရုပ်ရှင�
 
 # Sidebar မှာ API Key ထည့်ရန်
 st.sidebar.header("Settings")
-api_key_input = st.sidebar.text_input("Gemini API Key ထည့်ပါ", type="password")
+api_key_input = st.sidebar.text_input("AQ.Ab8RN6KKOLIO4TH5a7WZuvc47RNN3KRMHOJqMRp0yxXgMo-W8Q", type="password")
 
 # Main Section
 movie_title = st.text_input("ရုပ်ရှင်နာမည် (သို့) ဇာတ်လမ်းအကြောင်း အတိုချုပ် ရေးပါ")
