@@ -5,15 +5,15 @@ import os
 
 st.set_page_config(page_title="My Movie Recap App", page_icon="🎬")
 
-st.title("🎬 ကိုယ်ပိုင် Movie Recap Generator (Voice Sample ပါ)")
-st.write("ရုပ်ရှင်ဇာတ်လမ်းအတွက် Recap Script များနှင့် အသံထွက် (Voiceover) များကို ထုတ်ယူပါ")
+st.title("🎬 ကိုယ်ပိုင် Movie Recap Generator (Multiple Voices)")
+st.write("ရုပ်ရှင်ဇာတ်လမ်းအတွက် Script များနှင့် အသံပုံစံအမျိုးမျိုးကို စိတ်ကြိုက်ရွေးချယ်ပါ")
 
 # Sidebar မှာ Settings တွေ ထည့်ရန်
 st.sidebar.header("Settings")
 api_key_input = st.sidebar.text_input("Gemini API Key ထည့်ပါ", type="password")
 
 voice_style = st.sidebar.selectbox(
-    "🎙️ အသံ/ပြောဟန် ပုံစံ ရွေးပါ",
+    "🎙️ AI Script ပုံစံ ရွေးပါ",
     [
         "🎭 ဇာတ်လမ်းပြောဆရာ (Dramatic Narrator)",
         "🔥 အက်ရှင်ဆန်ဆန် (Action & Hype)",
@@ -21,26 +21,42 @@ voice_style = st.sidebar.selectbox(
     ]
 )
 
+# -------------------------------------------------------------
+# အသံအမျိုးအစား (Voice Models) ရွေးချယ်ရန် အပိုင်း
+# -------------------------------------------------------------
+st.sidebar.markdown("---")
+st.sidebar.subheader("🔊 အသံထွက် (Voice) ပုံစံများ")
+selected_voice_type = st.sidebar.selectbox(
+    "အသံအမျိုးအစား ရွေးပါ",
+    [
+        "🇲🇲 မြန်မာ အသံစံ (Standard Myanmar)",
+        "🇬🇧 နိုင်ငံတကာ လေသံ (English - UK Accent)",
+        "🇺🇸 အမေရိကန် လေသံ (English - US Accent)"
+    ]
+)
+
 # Main Section
 movie_title = st.text_input("ရုပ်ရှင်နာမည် (သို့) ဇာတ်လမ်းအကြောင်း အတိုချုပ် ရေးပါ")
 uploaded_file = st.file_uploader("သို့မဟုတ် ရုပ်ရှင်ဗီဒီယိုဖိုင်ကို တင်ပါ (MP4)", type=["mp4", "mov", "avi"])
 
-# -------------------------------------------------------------
-# နမူနာ Voice အသံအစမ်းပြရန် အပိုင်း
-# -------------------------------------------------------------
 st.markdown("---")
 st.subheader("🔊 Voice အသံအစမ်း နားဆင်ရန်")
 sample_text = st.text_input("အသံထွက်စမ်းရန် စာသား ရိုက်ပါ", "မင်္ဂလာပါဗျ၊ ဒီနေ့ တင်ဆက်ပေးမှာကတော့ စိတ်လှုပ်ရှားစရာ ဇာတ်လမ်းကောင်းပဲ ဖြစ်ပါတယ်။")
 
 if st.button("🎧 အသံနမူနာ ထုတ်မည်"):
     try:
-        # gTTS ဖြင့် မြန်မာစာကို အသံဖိုင် (mp3) ပြောင်းခြင်း
-        tts = gTTS(text=sample_text, lang='my', slow=False)
+        # ရွေးချယ်ထားသော Voice ပုံစံအလိုက် gTTS သတ်မှတ်ခြင်း
+        if "Myanmar" in selected_voice_type:
+            tts = gTTS(text=sample_text, lang='my', slow=False)
+        elif "UK" in selected_voice_type:
+            tts = gTTS(text=sample_text, lang='en', tld='co.uk', slow=False)
+        else:
+            tts = gTTS(text=sample_text, lang='en', tld='com', slow=False)
+            
         tts.save("sample_voice.mp3")
         
-        # Website ပေါ်မှာ Audio Player ပြသပေးခြင်း
         st.audio("sample_voice.mp3", format="audio/mp3")
-        st.success("✨ အသံနမူနာ အზမ်းထုတ်ပြီးပါပြီ!")
+        st.success("✨ ရွေးချယ်ထားသော အသံပုံစံဖြင့် အသံနမူနာ ထွက်လာပါပြီ!")
     except Exception as e:
         st.error(f"အသံထုတ်ယူရာတွင် အမှားရှိနေပါသည်: {e}")
 
